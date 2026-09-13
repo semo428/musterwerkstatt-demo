@@ -400,7 +400,11 @@ body.plain .asklabel{ display:none; }
 .bst{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(26px,4vw,56px); align-items:center; }
 .bst + .bst{ margin-top:clamp(44px,6vw,80px); }
 .bst.rev .bstdemo{ order:2; }
-@media (max-width:900px){ .bst{ grid-template-columns:1fr; gap:28px; } .bst.rev .bstdemo{ order:0; } }
+@media (max-width:900px){
+  .bst{ grid-template-columns:1fr; gap:26px; }
+  /* Ueberschrift und Erklaerung zuerst, die Darstellung darunter */
+  .bstdemo{ order:2; }
+}
 .bst > *{ min-width:0; }
 .bstdemo{ display:flex; justify-content:center; }
 .bstnum{
@@ -1172,4 +1176,71 @@ body.plain .asklabel{ display:none; }
   .htel{ font-size:.88rem; }
   .ck-kopf{ padding:8px 12px; }
   .ck-feld{ padding:8px 9px 8px 13px; }
+}
+
+/* =========================================================================
+   KAPITEL-TRENNER zwischen den Use Cases
+   Loest zwei Dinge auf einmal: sichtbare Abgrenzung und eine Marke,
+   die vor dem jeweiligen Inhalt steht statt darin zu verschwinden.
+   ========================================================================= */
+.uc-trenner{
+  display:flex; align-items:center; gap:clamp(12px,2vw,20px);
+  margin:clamp(56px,7vw,86px) 0 clamp(26px,3.5vw,38px);
+}
+.uc-trenner:first-of-type{ margin-top:clamp(30px,4vw,46px); }
+.uc-trenner::before,
+.uc-trenner::after{
+  content:''; flex:1; height:1px; min-width:12px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.20));
+}
+.uc-trenner::after{ background:linear-gradient(90deg,rgba(255,255,255,.20),transparent); }
+
+.uc-marke{
+  display:inline-flex; align-items:center; gap:10px; flex:none;
+  padding:9px 18px; border-radius:100px;
+  background:rgba(255,106,19,.10); border:1px solid rgba(255,106,19,.34);
+  box-shadow:0 0 26px rgba(255,106,19,.12);
+}
+.uc-marke svg{ width:14px; height:14px; color:var(--ac); flex:none; }
+.uc-marke b{
+  font-family:var(--disp); font-size:1rem; font-weight:700;
+  letter-spacing:.13em; text-transform:uppercase; color:var(--ac);
+  white-space:nowrap;
+}
+.uc-marke i{
+  font-style:normal; font-size:.83rem; color:#9FAABA;
+  padding-left:11px; border-left:1px solid rgba(255,255,255,.16);
+  white-space:nowrap;
+}
+
+/* Schmale Bildschirme: durchgehende Trennlinie, Marke mittig darunter.
+   Kurze Linienstummel neben der Marke wirken sonst wie ein Versehen. */
+@media (max-width:620px){
+  .uc-trenner{
+    position:relative; flex-direction:column; gap:0;
+    padding-top:24px; margin:clamp(40px,8vw,56px) 0 22px;
+  }
+  .uc-trenner::before{
+    position:absolute; top:0; left:0; right:0; height:1px; flex:none; min-width:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.24),transparent);
+  }
+  .uc-trenner::after{ display:none; }
+  .uc-marke{
+    flex-wrap:wrap; justify-content:center; padding:8px 16px; gap:6px;
+    max-width:100%;
+  }
+  .uc-marke b{ font-size:.9rem; letter-spacing:.1em; }
+  .uc-marke i{
+    font-size:.76rem; padding-left:0; border-left:0;
+    flex-basis:100%; text-align:center; white-space:normal;
+  }
+}
+
+/* Sehr schmale Geraete: Marke darf schrumpfen, Linien treten zurueck */
+@media (max-width:380px){
+  .uc-trenner{ gap:7px; }
+  .uc-trenner::before, .uc-trenner::after{ min-width:0; }
+  .uc-marke{ flex:0 1 auto; min-width:0; padding:7px 12px; }
+  .uc-marke b{ font-size:.85rem; letter-spacing:.08em; white-space:normal; }
+  .uc-marke i{ font-size:.72rem; }
 }
