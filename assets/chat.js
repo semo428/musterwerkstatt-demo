@@ -252,7 +252,8 @@
     var hero = document.getElementById('chat-hero');
     if (hero) mount(hero, false);
 
-    add(C.begruessung, 'bot');
+    var schmal = window.matchMedia && window.matchMedia('(max-width:620px)').matches;
+    add(schmal && C.begruessungKurz ? C.begruessungKurz : C.begruessung, 'bot');
     views.forEach(function (v) { v.log.scrollTop = 0; });
 
     var holder = document.createElement('div');

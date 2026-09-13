@@ -104,13 +104,41 @@
     var el = document.getElementById('pakete');
     if (!el) return;
     el.innerHTML = S.pakete.map(function (p) {
-      return '<div class="pak rv' + (p.top ? ' top' : '') + '">' +
-        (p.top ? '<span class="paktag">Meist gewählt</span>' : '') +
+      return '<div class="pak rv' + (p.top ? ' empfohlen' : '') + '">' +
+        (p.top ? '<span class="paktag">Unsere Empfehlung</span>' : '') +
         '<h3>' + esc(p.name) + '</h3>' +
-        '<div class="pakp">' + esc(p.setup) + ' <small>einmalig</small></div>' +
-        '<div class="small mut">danach ' + esc(p.monat) + ' im Monat</div>' +
+        '<p class="pakfuer">' + esc(p.fuer) + '</p>' +
+        '<div class="pakp">' + esc(p.spanne) + '</div>' +
+        '<div class="pakmeta">einmalig, je nach Umfang<br>' +
+          '<b>danach ' + esc(p.monat) + ' im Monat</b></div>' +
         '<ul class="tick">' + p.punkte.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' +
         '<a class="btn ' + (p.top ? 'b-pri' : 'b-gho') + '" href="#gespraech">Unverbindlich anfragen</a>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderFunktionen() {
+    var el = document.getElementById('funktionen');
+    if (!el) return;
+    el.innerHTML = S.funktionen.map(function (f) {
+      return '<div class="fnk rv">' +
+        '<span class="fnk-ic">' + icon(f.icon) + '</span>' +
+        '<b>' + esc(f.titel) + '</b>' +
+        '<span>' + esc(f.text) + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderAblauf() {
+    var el = document.getElementById('ablauf');
+    if (!el) return;
+    el.innerHTML = S.ablauf.map(function (a, i) {
+      return '<div class="schritt rv' + (a.hervor ? ' hervor' : '') + '">' +
+        '<span class="schritt-nr">' + (i + 1) + '</span>' +
+        '<div class="schritt-txt">' +
+          '<b>' + esc(a.titel) + '</b>' +
+          '<p>' + esc(a.text) + '</p>' +
+        '</div>' +
       '</div>';
     }).join('');
   }
@@ -224,6 +252,274 @@
       });
     }, { threshold: .35 });
     document.querySelectorAll('.kizone').forEach(function (e) { ip.observe(e); });
+  }
+
+  /* =======================================================================
+     ABSCHNITT „IN AKTION" – Chat und Kalender, zwei Szenarien
+
+     WICHTIG: Die Zeiten, die der Assistent im Chat vorschlaegt, muessen
+     echte Luecken in KAL_BASIS sein. Sonst behauptet die Demo etwas,
+     das die Darstellung daneben widerlegt.
+     ======================================================================= */
+
+  /* Belegter Wochenplan. tag 0 = Mo … 4 = Fr, start als Dezimalstunde. */
+  var KAL_BASIS = [
+    { tag:0, start:9,    dauer:2,   titel:'Inspektion',    unter:'Passat B8' },
+    { tag:0, start:14,   dauer:1,   titel:'HU / AU',       unter:'Corsa E' },
+
+    { tag:1, start:8.5,  dauer:1,   titel:'Ölwechsel',     unter:'Polo VI' },
+    { tag:1, start:10.5, dauer:1.5, titel:'Bremsen vorne', unter:'Focus III' },
+    { tag:1, start:14,   dauer:2,   titel:'Inspektion',    unter:'Octavia' },
+
+    { tag:2, start:9,    dauer:1,   titel:'Klimaservice',  unter:'A4 B9' },
+    { tag:2, start:10.5, dauer:1,   titel:'Achsvermessung',unter:'Leon III' },
+    { tag:2, start:13,   dauer:3,   titel:'Getriebe',      unter:'T6' },
+
+    { tag:3, start:8,    dauer:2,   titel:'Diagnose',      unter:'Golf 8' },
+    { tag:3, start:11,   dauer:1,   titel:'HU / AU',       unter:'Yaris' },
+    { tag:3, start:14,   dauer:2.5, titel:'Unfallschaden', unter:'Kuga II' },
+
+    { tag:4, start:8,    dauer:3,   titel:'Inspektion',    unter:'Transporter' },
+    { tag:4, start:13,   dauer:1,   titel:'Reifenwechsel', unter:'Polo VI' }
+  ];
+
+  /* Freie Luecken, die daraus entstehen und im Chat genannt werden:
+       Di 09:30 – 10:30  (zwischen Ölwechsel und Bremsen)   ← wird gebucht
+       Do 10:00 – 11:00  (zwischen Diagnose und HU)
+       Fr 11:00 – 12:00  (nach der Inspektion)
+       Mo 11:00 – 12:00  (nach der Inspektion)
+       Mi 10:00 – 10:30  (zwischen Klima und Achsvermessung) ← Rueckruf
+       Do 10:30 – 11:00  (Rest der Diagnose-Luecke)                       */
+
+  var SZENARIEN = [
+    {
+      tab: 'Werkstatttermin buchen',
+      hinweis: 'Der Assistent liest den Kalender, nennt nur tatsächlich freie Zeiten und trägt den Termin passgenau in die Lücke ein – mit Fahrzeug, Kennzeichen und Anliegen.',
+      chat: [
+        { s:'me',  t:'Hallo, ich bräuchte einen Termin zum Reifenwechsel.' },
+        { s:'bot', t:'Sehr gern. Für welches Fahrzeug – und liegen Ihre Winterräder bei uns im Lager?', d:1300 },
+        { s:'me',  t:'Golf 7, MU-AB 123. Räder habt ihr eingelagert.' },
+        { s:'bot', t:'Perfekt, Ihr Radsatz steht auf Platz B-14.\nFür den Wechsel plane ich eine Stunde ein.\n\nFrei wäre diese Woche:\n• Di, 09:30\n• Do, 10:00\n• Fr, 11:00', d:1800 },
+        { s:'me',  t:'Dienstag 9:30 passt.' },
+        { s:'bot', t:'Eingetragen ✅\n\nDi, 14.10. · 09:30 – 10:30 Uhr\nReifenwechsel inkl. Auswuchten\n39 € · Radsatz wird bereitgestellt', d:2000 }
+      ],
+      termin: { tag:1, start:9.5, dauer:1, art:'service',
+                titel:'Reifenwechsel', unter:'MU-AB 123 · Golf 7' }
+    },
+    {
+      tab: 'Rückruf vereinbaren',
+      hinweis: 'Nicht jedes Anliegen gehört in den Werkstattkalender. Der Assistent vergibt stattdessen ein kurzes Zeitfenster aus Ihrem eigenen Kalender – Sie rufen zurück, alles Weitere klären Sie am Telefon.',
+      chat: [
+        { s:'me',  t:'Mein Auto macht beim Lenken komische Geräusche. Können Sie mal draufschauen?' },
+        { s:'bot', t:'Das sollte sich ein Meister direkt anhören, bevor wir etwas einplanen. Herr Meier ruft Sie gern zurück.\n\nEr hat Zeit:\n• Mo, 11:00\n• Mi, 10:00\n• Do, 10:30', d:1700 },
+        { s:'me',  t:'Mittwoch um 10 wäre gut.' },
+        { s:'bot', t:'Notiert ✅\n\nHerr Meier ruft Sie Mi, 15.10. um 10:00 Uhr an.\nUnter welcher Nummer erreicht er Sie?', d:1600 },
+        { s:'me',  t:'0170 1234567' },
+        { s:'bot', t:'Danke, ist hinterlegt. Bis Mittwoch!', d:1300 }
+      ],
+      termin: { tag:2, start:10, dauer:0.5, art:'call',
+                titel:'Rückruf · Frau Keller', unter:'0170 1234567' }
+    }
+  ];
+
+  var KAL_START = 8, KAL_ENDE = 18;
+  var KAL_TAGE = [['Mo', 13], ['Di', 14], ['Mi', 15], ['Do', 16], ['Fr', 17]];
+
+  function kalPos(t) {
+    var spanne = KAL_ENDE - KAL_START;
+    return {
+      oben:  ((t.start - KAL_START) / spanne) * 100,
+      hoehe: (t.dauer / spanne) * 100,
+      links: t.tag * 20
+    };
+  }
+
+  function terminHtml(t, neu) {
+    var p = kalPos(t);
+    return '<div class="kal-ev ' + (t.art || 'alt') + (neu ? ' neu' : '') +
+      (t.dauer <= 0.5 ? ' kurz' : '') + '" ' +
+      'style="left:' + p.links + '%;top:' + p.oben + '%;height:' + p.hoehe + '%">' +
+      '<b>' + esc(t.titel) + '</b><span>' + esc(t.unter) + '</span></div>';
+  }
+
+  /* Gestrichelter Platzhalter, der die Luecke vor dem Eintrag markiert */
+  function lueckeHtml(t) {
+    var p = kalPos(t);
+    return '<div class="kal-luecke" style="left:' + p.links + '%;top:' + p.oben +
+      '%;height:' + p.hoehe + '%"><span>frei</span></div>';
+  }
+
+  function kalenderHtml() {
+    var kopf = '<span class="kal-ecke"></span>' + KAL_TAGE.map(function (d) {
+      return '<span class="kal-tag">' + d[0] + '<i>' + d[1] + '</i></span>';
+    }).join('');
+
+    var zeilen = '';
+    for (var h = KAL_START; h < KAL_ENDE; h++) {
+      zeilen += '<span class="kal-zeit">' + (h < 10 ? '0' : '') + h + '</span>';
+      for (var d = 0; d < 5; d++) zeilen += '<span class="kal-zelle"></span>';
+    }
+
+    return '<div class="kal-top">' +
+        '<span class="kal-ampel"><i></i><i></i><i></i></span>' +
+        '<b>Werkstattkalender</b>' +
+        '<span class="kal-monat">Oktober 2026 · KW 42</span>' +
+      '</div>' +
+      '<div class="kal-body">' +
+        '<div class="kal-grid">' + kopf + zeilen + '</div>' +
+        '<div class="kal-layer">' +
+          KAL_BASIS.map(function (t) { return terminHtml(t, false); }).join('') +
+        '</div>' +
+      '</div>';
+  }
+
+  function demoBuehne(root) {
+    // Tabs und Hinweiszeile liegen ausserhalb der Buehne, im selben Abschnitt
+    var abschnitt = root.closest('section') || document;
+    var chatEl = root.querySelector('.bchat-log');
+    var kalEl  = root.querySelector('.bkal');
+    var tabsEl = abschnitt.querySelector('.sz-tabs');
+    var noteEl = abschnitt.querySelector('.sz-note');
+    if (!chatEl || !kalEl || !tabsEl || !noteEl) return;
+    var aktiv = 0;
+
+    /* --- Ablaufsteuerung mit Pause -------------------------------------
+       Die Animation haengt an verketteten Timern. Damit sie anhalten kann,
+       merkt sich "plane" den naechsten Schritt und dessen Restzeit. --- */
+    var pausiert = false, naechster = null, timerId = null, rest = 0, seit = 0;
+
+    function plane(fn, ms) {
+      naechster = fn;
+      rest = ms;
+      if (pausiert) return;
+      seit = Date.now();
+      timerId = setTimeout(function () { naechster = null; fn(); }, ms);
+    }
+
+    function stop() {
+      clearTimeout(timerId);
+      naechster = null; rest = 0; timerId = null;
+    }
+
+    function anhalten() {
+      if (pausiert) return;
+      if (naechster && timerId) {
+        clearTimeout(timerId);
+        rest = Math.max(120, rest - (Date.now() - seit));
+      }
+      pausiert = true;
+      root.classList.add('pausiert');
+    }
+
+    function fortsetzen() {
+      if (!pausiert) return;
+      pausiert = false;
+      root.classList.remove('pausiert');
+      if (naechster) plane(naechster, rest);
+    }
+
+    /* Lesezeit richtet sich nach der Laenge der Nachricht */
+    function lesezeit(m) {
+      var n = m.t.length;
+      return m.s === 'bot'
+        ? Math.min(900 + n * 22, 2900)
+        : Math.min(550 + n * 14, 1250);
+    }
+
+
+    function nachricht(m) {
+      var d = document.createElement('div');
+      d.className = 'bmsg ' + m.s;
+      d.textContent = m.t;
+      chatEl.appendChild(d);
+      chatEl.scrollTop = chatEl.scrollHeight;
+    }
+
+    function tippt(an) {
+      var t = chatEl.querySelector('.btyp');
+      if (an && !t) {
+        t = document.createElement('div');
+        t.className = 'bmsg bot btyp';
+        t.innerHTML = '<i></i><i></i><i></i>';
+        chatEl.appendChild(t);
+        chatEl.scrollTop = chatEl.scrollHeight;
+      } else if (!an && t) { t.remove(); }
+    }
+
+    function eintragen(t) {
+      var layer = kalEl.querySelector('.kal-layer');
+      if (!layer) return;
+      // Schritt 1: die Luecke sichtbar machen
+      layer.insertAdjacentHTML('beforeend', lueckeHtml(t));
+      kalEl.classList.add('fokus');
+      // Schritt 2: Termin faellt hinein
+      plane(function () {
+        var l = layer.querySelector('.kal-luecke');
+        if (l) l.remove();
+        layer.insertAdjacentHTML('beforeend', terminHtml(t, true));
+        plane(function () { kalEl.classList.remove('fokus'); }, 2600);
+      }, 950);
+    }
+
+    function spiele(i) {
+      var sz = SZENARIEN[aktiv];
+      if (i >= sz.chat.length) {
+        plane(function () {
+          eintragen(sz.termin);
+          plane(function () { starte(aktiv); }, 9000);
+        }, 700);
+        return;
+      }
+      var m = sz.chat[i];
+      function rein() {
+        nachricht(m);
+        plane(function () { spiele(i + 1); }, lesezeit(m));
+      }
+      if (m.s === 'bot') {
+        tippt(true);
+        plane(function () { tippt(false); rein(); }, (m.d || 1400) * 0.72);
+      } else { rein(); }
+    }
+
+    function starte(i) {
+      stop();
+      aktiv = i;
+      chatEl.innerHTML = '';
+      kalEl.classList.remove('fokus');
+      kalEl.innerHTML = kalenderHtml();
+      noteEl.textContent = SZENARIEN[i].hinweis;
+      [].forEach.call(tabsEl.children, function (b, n) { b.classList.toggle('on', n === i); });
+
+      if (reduce) {
+        SZENARIEN[i].chat.forEach(nachricht);
+        eintragen(SZENARIEN[i].termin);
+        return;
+      }
+      plane(function () { spiele(0); }, 700);
+    }
+
+    tabsEl.innerHTML = SZENARIEN.map(function (s, i) {
+      return '<button class="sz-tab' + (i ? '' : ' on') + '" type="button" data-sz="' + i + '">' +
+        esc(s.tab) + '</button>';
+    }).join('');
+
+    tabsEl.addEventListener('click', function (e) {
+      var b = e.target.closest('.sz-tab');
+      if (b) starte(parseInt(b.dataset.sz, 10));
+    });
+
+    // Anhalten nur, solange die Maus auf dem Telefon liegt.
+    // Die Markierung .pausiert sitzt weiterhin auf der Buehne, damit
+    // Plakette und angehaltene Animationen daran haengen koennen.
+    var phoneEl = root.querySelector('.bphone');
+    if (phoneEl) {
+      phoneEl.addEventListener('mouseenter', anhalten);
+      phoneEl.addEventListener('mouseleave', fortsetzen);
+    }
+
+    kalEl.innerHTML = kalenderHtml();
+    noteEl.textContent = SZENARIEN[0].hinweis;
+    sicht(root, function () { pausiert = false; root.classList.remove('pausiert'); starte(aktiv); }, stop);
   }
 
   /* =======================================================================
@@ -408,6 +704,8 @@
      ======================================================================= */
   function init() {
     renderLeistungen();
+    renderFunktionen();
+    renderAblauf();
     renderZeiten();
     renderPakete();
     fuellePlatzhalter();
@@ -415,6 +713,7 @@
     schalter();
     beobachte();
 
+    var bu = document.getElementById('demo-buehne'); if (bu) demoBuehne(bu);
     var wa = document.getElementById('demo-wa');   if (wa) demoWhatsApp(wa);
     var fl = document.getElementById('demo-flow'); if (fl) demoFlow(fl);
     var ig = document.getElementById('demo-ig');   if (ig) demoInsta(ig);

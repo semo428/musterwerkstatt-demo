@@ -10,7 +10,6 @@ window.SITE = {
     name:     'Musterwerkstatt',
     nameLang: 'Musterwerkstatt Meier GmbH',
     claim:    'Kompetent. Ehrlich. Zuverlässig.',
-    inhaber:  'Thomas Meier',
     seit:     1998
   },
 
@@ -72,6 +71,7 @@ window.SITE = {
     titel:       'Werkstatt-Assistent',
     untertitel:  'Antwortet sofort · 24/7',
     begruessung: 'Guten Tag! Ich bin der digitale Assistent der Musterwerkstatt. Ich kenne unsere Leistungen, Preise und den Werkstattkalender – fragen Sie mich einfach, oder lassen Sie sich direkt einen Termin einbuchen.',
+    begruessungKurz: 'Guten Tag! Ich kenne Preise, Leistungen und den Werkstattkalender – fragen Sie mich einfach.',
     vorschlaege: [
       'Was kostet die HU?',
       'Termin für Reifenwechsel',
@@ -79,6 +79,22 @@ window.SITE = {
       'Motorkontrollleuchte leuchtet'
     ]
   },
+
+  /* --- Was der Assistent kann (Abschnitt „In Aktion") -------------------- */
+  funktionen: [
+    { icon:'clock',    titel:'Antwortet rund um die Uhr',
+      text:'Abends, sonntags, in der Mittagspause – genau dann, wenn bei Ihnen niemand ans Telefon geht.' },
+    { icon:'calendar', titel:'Bucht selbstständig Termine',
+      text:'Er kennt Ihre Terminarten samt Dauer, prüft den Kalender und trägt verbindlich ein.' },
+    { icon:'phone',    titel:'Vergibt Rückruf-Zeitfenster',
+      text:'Gehört ein Anliegen ans Telefon, bietet er Zeiten an, zu denen Sie laut Kalender wirklich können.' },
+    { icon:'shield',   titel:'Erfindet nichts',
+      text:'Er antwortet nur aus Ihrer freigegebenen Wissensbasis. Weiß er etwas nicht, sagt er das offen.' },
+    { icon:'database', titel:'Nimmt alles vollständig auf',
+      text:'Name, Telefon, Fahrzeug, Kennzeichen, Anliegen – kein Zettel mit halben Angaben mehr.' },
+    { icon:'bolt',     titel:'Erkennt Notfälle',
+      text:'Bei Panne oder defekten Bremsen bucht er keinen Termin, sondern nennt sofort Ihre Nummer.' }
+  ],
 
   /* --- Bilder (Unsplash-IDs, geprüft) ----------------------------------- */
   bilder: {
@@ -103,13 +119,79 @@ window.SITE = {
     mail:  'info@askconnect.de'
   },
 
-  /* --- Pakete  ▸ HIER EURE ECHTEN PREISE EINTRAGEN ---------------------- */
+  /* --- Pakete -----------------------------------------------------------
+     Drei eigenständige Angebote, keine Stufenleiter.
+     spanne = einmalige Einrichtung · monat = laufender Betrieb
+     -------------------------------------------------------------------- */
   pakete: [
-    { name:'Website-Assistent', setup:'690 €', monat:'89 €', top:false,
-      punkte:['Chat-Assistent auf Ihrer Website','Antworten aus Ihrer Wissensbasis','Terminbuchung in Google Kalender'] },
-    { name:'+ WhatsApp', setup:'1.290 €', monat:'149 €', top:true,
-      punkte:['Alles aus Website-Assistent','Derselbe Bot auf WhatsApp','Automatische HU- und Saison-Erinnerungen','Terminerinnerung gegen No-Shows'] },
-    { name:'Rundum', setup:'1.990 €', monat:'249 €', top:false,
-      punkte:['Alles aus + WhatsApp','Social-Media-Autopilot','Automatische Bewertungsanfragen'] }
+    {
+      name:   'Social-Media-Autopilot',
+      fuer:   'Nur Marketing – auch ohne Assistent buchbar.',
+      spanne: '399 – 599 €',
+      monat:  '34,99 €',
+      top:    false,
+      punkte: [
+        'Beiträge für Instagram und Facebook',
+        'Saisonthemen sind hinterlegt',
+        'Ein Foto per WhatsApp genügt',
+        'Freigabe vor jeder Veröffentlichung'
+      ]
+    },
+    {
+      name:   'Website-Assistent',
+      fuer:   'Der Einstieg: Fragen und Termine auf Ihrer Seite.',
+      spanne: '399 – 599 €',
+      monat:  '39,99 €',
+      top:    false,
+      punkte: [
+        'Assistent in Ihrem Erscheinungsbild',
+        'Antworten nur aus Ihrer Wissensbasis',
+        'Termine direkt in Google Kalender',
+        'Wahlweise nur Rückruf-Zeitfenster'
+      ]
+    },
+    {
+      name:   'Assistent + WhatsApp',
+      fuer:   'Erreichbar auf dem Kanal, den Ihre Kunden nutzen.',
+      spanne: '699 – 999 €',
+      monat:  '49,99 €',
+      top:    true,
+      punkte: [
+        'Alles aus dem Website-Assistenten',
+        'Ihre Werkstattnummer wird angebunden',
+        'Erinnerungen an HU, Inspektion, Reifen',
+        'Terminerinnerung gegen No-Shows'
+      ]
+    },
+    {
+      name:   'All-in',
+      fuer:   'Alles zusammen – Anfragen und Marketing.',
+      spanne: '1.099 – 1.399 €',
+      monat:  '69,99 €',
+      top:    false,
+      punkte: [
+        'Alles aus „Assistent + WhatsApp“',
+        'Plus kompletter Social-Media-Autopilot',
+        'Günstiger als beide Pakete einzeln',
+        'Quartalsgespräch zur Feinjustierung'
+      ]
+    }
+  ],
+
+  /* --- Ablauf der Zusammenarbeit ---------------------------------------- */
+  ablauf: [
+    { titel:'Kostenloses Erstgespräch',
+      text:'20 bis 30 Minuten am Telefon oder bei Ihnen vor Ort. Sie erzählen, wie Anfragen bei Ihnen hereinkommen und was am meisten Zeit frisst. Danach wissen Sie, ob sich das für Ihren Betrieb lohnt – unverbindlich und ohne Kosten.' },
+    { titel:'Wir schauen uns Ihren Alltag an',
+      text:'Welche Fragen kommen immer wieder? Wo bleiben Anfragen liegen? Wir suchen die zwei, drei Stellen mit dem größten Hebel – statt Ihren ganzen Betrieb umzukrempeln.' },
+    { titel:'Sie bekommen ein festes Angebot',
+      text:'Ein Vorschlag mit klarem Umfang, festem Preis und benannten laufenden Kosten. Keine Stundenzettel, keine Überraschungen auf der Rechnung.' },
+    { titel:'Wir richten alles ein',
+      text:'Wir sammeln Ihre Unterlagen ein – Preisliste, Leistungen, häufige Fragen –, bauen den Assistenten und binden ihn in Ihre Website ein. Ihr Aufwand: ein bis zwei Termine, den Rest machen wir.' },
+    { titel:'Zwei Wochen testen – das Risiko liegt bei uns',
+      hervor: true,
+      text:'Sie und Ihr Team probieren alles in Ruhe aus und sagen uns, wo die Antworten noch nicht passen. Überzeugt es Sie nicht, geben Sie es zurück – vom Einrichtungspreis zahlen Sie dann keinen Cent. Offen bleiben nur die Kosten, die im Testbetrieb wirklich angefallen sind, etwa für Hosting und KI-Nutzung.' },
+    { titel:'Wir bleiben erreichbar',
+      text:'Nach dem Start schauen wir gemeinsam, was gut läuft und was noch fehlt. Wenn etwas hakt, sind wir kurzfristig für Sie da – und erweitern die Lösung, wenn Ihr Betrieb wächst.' }
   ]
 };

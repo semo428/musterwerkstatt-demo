@@ -32,8 +32,8 @@
     <nav class="nav" data-nav>
       <a href="#start">Start</a>
       <a href="#leistungen">Leistungen</a>
-      <a href="#assistent" class="ki">KI-Assistent</a>
-      <a href="#betrieb">Über uns</a>
+      <a href="#aktion" class="ki">In Aktion</a>
+      <a href="#assistent" class="ki">Bausteine</a>
       <a href="#kontakt">Kontakt</a>
     </nav>
 
@@ -52,8 +52,8 @@
 <nav class="pills" data-nav>
   <a href="#start">Start</a>
   <a href="#leistungen">Leistungen</a>
-  <a href="#assistent" class="ki">⚡ KI-Assistent</a>
-  <a href="#betrieb">Über uns</a>
+  <a href="#aktion" class="ki">⚡ In Aktion</a>
+  <a href="#assistent" class="ki">Bausteine</a>
   <a href="#kontakt">Kontakt</a>
   <a href="#fuer-werkstaetten">Für Werkstätten</a>
 </nav>
@@ -111,6 +111,70 @@
     <div class="grid g3" id="leistungs-grid"></div>
 
     <p class="weitere" id="txt-weitere"></p>
+  </div>
+</section>
+
+<!-- ═══════════ 3 · DER ASSISTENT IN AKTION ═══════════ -->
+<section id="aktion" class="bg2">
+  <div class="wrap">
+
+    <div class="sechead mid">
+      <span class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg> Der Assistent in Aktion</span>
+      <h2>Von der Frage zum Eintrag<br>im Kalender</h2>
+      <p>
+        Links schreibt ein Kunde, rechts füllt sich Ihr Kalender – ohne dass bei Ihnen
+        jemand den Hörer abnimmt. Wählen Sie, welchen Ablauf Sie sehen möchten.
+      </p>
+    </div>
+
+    <div class="sz-tabs" role="tablist" aria-label="Ablauf auswählen"></div>
+
+    <div class="buehne kizone" id="demo-buehne">
+      <span class="bpause" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>Angehalten</span>
+      <span class="kiflag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg> Läuft automatisch</span>
+
+      <div class="buehne-in">
+        <!-- Kundensicht -->
+        <div class="bseite">
+          <span class="bseite-titel">Was Ihr Kunde sieht</span>
+          <div class="bphone">
+            <div class="bphone-screen">
+              <div class="bchat-head">
+                <span class="bchat-av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></svg></span>
+                <span><b>Werkstatt-Assistent</b><span><i class="dotlive"></i>online</span></span>
+              </div>
+              <div class="bchat-log"></div>
+              <div class="bchat-foot"><span class="bchat-feld">Nachricht schreiben …</span></div>
+            </div>
+          </div>
+          <span class="bhinweis">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+            Zum Mitlesen: Maus auf das Telefon halten – der Ablauf hält an.
+          </span>
+        </div>
+
+        <!-- Verbindung -->
+        <div class="bpfeil" aria-hidden="true">
+          <span class="bpfeil-linie"></span>
+          <span class="bpfeil-chip">automatisch</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </div>
+
+        <!-- Werkstattsicht -->
+        <div class="bseite">
+          <span class="bseite-titel">Was bei Ihnen ankommt</span>
+          <div class="bkal"></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="sz-note"></p>
+
+    <div class="sechead mid" style="margin-top:clamp(44px,6vw,72px)">
+      <h3 style="font-size:clamp(1.4rem,3.4vw,1.9rem);text-transform:uppercase">Was er sonst noch übernimmt</h3>
+    </div>
+    <div class="grid g3" id="funktionen"></div>
+
   </div>
 </section>
 
@@ -248,34 +312,6 @@
   </div>
 </section>
 
-<!-- ═══════════ 4 · ÜBER UNS (schlicht) ═══════════ -->
-<section id="betrieb" class="bg2">
-  <div class="wrap split">
-    <div class="rv">
-      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=74"
-           alt="Kfz-Meister bei der Arbeit" loading="lazy" decoding="async">
-    </div>
-    <div class="rv">
-      <span class="eyebrow">Über uns</span>
-      <h2>Sechs Leute, die Ihr Auto kennen</h2>
-      <p>
-        Thomas Meier hat die Werkstatt 1998 von seinem Vater übernommen. Aus zwei
-        Hebebühnen ist ein Betrieb mit sechs Mitarbeitern geworden – und aus vielen
-        Kunden Stammkunden.
-      </p>
-      <p class="mut small">
-        Meisterbetrieb mit eigenem Ausbildungsplatz. Herstellerdiagnose,
-        Bremsenprüfstand, Achsvermessung und Klimaservice unter einem Dach.
-      </p>
-      <div class="zahlen">
-        <div class="zahl"><b>25+</b><span>Jahre Erfahrung</span></div>
-        <div class="zahl"><b>4.400</b><span>Fahrzeuge / Jahr</span></div>
-        <div class="zahl"><b>4,9</b><span>Sterne bei Google</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ═══════════ 5 · KONTAKT (schlicht, mit markiertem Block) ═══════════ -->
 <section id="kontakt">
   <div class="wrap">
@@ -329,19 +365,33 @@
       </p>
     </div>
 
-    <div class="grid g3" id="pakete" style="margin-bottom:clamp(40px,5vw,64px)"></div>
+    <div class="grid g4" id="pakete"></div>
 
-    <div class="split" style="align-items:start">
-      <div class="rv">
-        <h3 style="text-transform:uppercase">Wie es abläuft</h3>
-        <ul class="tick" style="margin-top:18px">
-          <li><b style="color:#fff">Gespräch, 20 Minuten.</b> Sie erzählen, was am meisten nervt. Wir sagen ehrlich, ob wir der Richtige sind.</li>
-          <li><b style="color:#fff">Wir sammeln ein.</b> Preisliste, Leistungen, Öffnungszeiten. Meist reicht, was ohnehin herumliegt.</li>
-          <li><b style="color:#fff">Aufbau, 5 bis 10 Tage.</b> Wir bauen alles auf und testen mit echten Fragen aus Ihrem Alltag.</li>
-          <li><b style="color:#fff">Freigabe &amp; Start.</b> Erst wenn Sie die Antworten gegengelesen haben, geht es live.</li>
-        </ul>
+    <div class="testbanner rv">
+      <span class="testbanner-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></span>
+      <div>
+        <b>Zwei Wochen testen – das Risiko liegt bei uns</b>
+        <span>Überzeugt es Sie nicht, geben Sie es zurück. <b class="tb-stark">Vom
+        Einrichtungspreis zahlen Sie dann keinen Cent</b>, und die Monatsgebühr entfällt
+        vollständig. Offen bleiben nur die Kosten, die im Testbetrieb wirklich angefallen
+        sind – Hosting und KI-Nutzung. Unsere Arbeit bleibt in diesem Fall unbezahlt.
+        Ein Risiko, das wir gern tragen – ehrlich gesagt rechnen wir nicht damit,
+        dass Sie davon Gebrauch machen.</span>
       </div>
+    </div>
 
+    <div class="ablauf-block">
+      <div class="sechead" style="margin-bottom:26px">
+        <h3 style="text-transform:uppercase">Wie es abläuft</h3>
+        <p style="color:#A9B4C2">Sechs Schritte, von denen Sie zwei aktiv begleiten. Den Rest machen wir.</p>
+      </div>
+      <div class="schritte" id="ablauf"></div>
+    </div>
+
+    <div class="faq-block">
+      <div class="sechead" style="margin-bottom:10px">
+        <h3 style="text-transform:uppercase">Offen gesagt</h3>
+      </div>
       <div class="faq rv">
         <details open>
           <summary>Meine Kunden wollen mit Menschen reden.</summary>
@@ -352,6 +402,12 @@
           <summary>Was, wenn er Unsinn erzählt?</summary>
           <div>Er antwortet nur aus der Wissensbasis, die Sie freigegeben haben – er denkt sich keine
           Preise aus. Findet er nichts, sagt er das und bietet einen Rückruf an.</div>
+        </details>
+        <details>
+          <summary>Muss dann jeder Auftrag im Kalender stehen?</summary>
+          <div>Nein, das entscheiden Sie. Der Assistent kann Termine direkt eintragen – oder
+          stattdessen nur ein Rückruf-Zeitfenster vergeben. Dann steht im Kalender lediglich,
+          dass Sie jemanden anrufen. Alles Weitere klären Sie am Telefon.</div>
         </details>
         <details>
           <summary>Muss ich meine Werkstattsoftware wechseln?</summary>
@@ -368,9 +424,11 @@
 
     <div class="mid" id="gespraech" style="margin-top:clamp(44px,6vw,70px); scroll-margin-top:100px">
       <h3 style="color:#fff;font-size:clamp(1.5rem,4vw,2.2rem);text-transform:uppercase">Zwanzig Minuten, dann wissen Sie es</h3>
-      <p style="color:#A9B4C2;max-width:52ch;margin:0 auto 26px">
+      <p style="color:#A9B4C2;max-width:54ch;margin:0 auto 26px">
         Kein Verkaufstermin mit Beamer. Ein Telefonat, in dem Sie sagen, wo es klemmt,
         und wir sagen, ob sich das für Sie rechnet – oder eben nicht.
+        <b style="color:#fff">Wenn Ihnen ein Gespräch vor Ort lieber ist, kommen wir
+        gern in Ihrem Betrieb vorbei</b> – auch dann kostenlos und unverbindlich.
       </p>
       <div class="brow" style="justify-content:center">
         <a class="btn b-pri b-lg" href="#" data-mailto>Gespräch vereinbaren</a>
