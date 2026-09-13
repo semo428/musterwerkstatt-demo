@@ -982,34 +982,8 @@ body.plain .asklabel{ display:none; }
   display:grid; place-items:center;
 }
 
-/* --- Pause beim Darüberfahren ------------------------------------------ */
-.bhinweis{
-  display:none; align-items:flex-start; gap:7px; max-width:262px;
-  font-size:.77rem; line-height:1.4; color:var(--soft); text-align:left;
-}
-.bhinweis svg{ width:13px; height:13px; flex:none; margin-top:2px; color:var(--ac); }
-@media (hover:hover) and (pointer:fine){
-  .bhinweis{ display:flex; }
-}
 
-.bpause{
-  position:absolute; top:14px; right:14px; z-index:6;
-  display:inline-flex; align-items:center; gap:6px;
-  background:var(--ink); color:#fff; padding:6px 13px; border-radius:100px;
-  font-size:.7rem; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
-  box-shadow:var(--sh2); pointer-events:none;
-  opacity:0; transform:translateY(-6px); transition:.2s cubic-bezier(.2,.7,.3,1);
-}
-.bpause svg{ width:12px; height:12px; color:var(--ac); }
-.buehne.pausiert .bpause{ opacity:1; transform:none; }
 
-/* Tipppunkte und Pfeil halten mit an */
-.buehne.pausiert .btyp i,
-.buehne.pausiert .bpfeil svg{ animation-play-state:paused; }
-
-/* „Läuft automatisch" tritt zurück, solange angehalten wird */
-.buehne .kiflag{ transition:opacity .2s ease; }
-.buehne.pausiert .kiflag{ opacity:.35; }
 
 /* =========================================================================
    Termin fällt in die Lücke
@@ -1127,24 +1101,6 @@ body.plain .asklabel{ display:none; }
   :root{ --navH:58px; }
 }
 
-/* =========================================================================
-   Pause-Knopf fuer Geraete ohne Mauszeiger
-   ========================================================================= */
-.bplay{
-  position:absolute; top:12px; right:12px; z-index:7; display:none;
-  align-items:center; gap:7px; cursor:pointer;
-  background:var(--ink); color:#fff; border:0; border-radius:100px;
-  padding:8px 15px 8px 12px; font-size:.78rem; font-weight:700;
-  letter-spacing:.04em; box-shadow:var(--sh2);
-}
-.bplay svg{ width:13px; height:13px; color:var(--ac); }
-.bplay:active{ transform:scale(.97); }
-@media (hover:none), (pointer:coarse){
-  .bplay{ display:inline-flex; }
-  .bhinweis{ display:none; }
-  .bpause{ display:none; }          /* der Knopf zeigt den Zustand selbst */
-  .buehne{ padding-top:52px; }
-}
 
 /* Kopf der Kompaktkarte: Name und Status untereinander, nicht aneinander */
 .ck-kopf .ctxt b{ display:block; }
@@ -1161,3 +1117,59 @@ body.plain .asklabel{ display:none; }
 .ck-text{ padding:11px 13px 9px; font-size:.855rem; }
 .ck-chips{ padding:0 13px 10px; }
 .ck-feld{ padding:10px 10px 10px 14px; }
+
+/* =========================================================================
+   ERSTE ANSICHT AUF DEM HANDY
+   Ziel: Titel, Telefonnummer und die markierte Chat-Karte ohne Scrollen.
+   Die Browser-Adressleiste frisst 120–180 px, entsprechend knapp ist es.
+   ========================================================================= */
+.nur-klein{ display:none; }
+
+@media (max-width:620px){
+  .nur-gross{ display:none; }
+  .nur-klein{ display:inline; }
+
+  .demobar{ font-size:.72rem; padding:6px 12px; line-height:1.35; }
+  .heroin{ padding-block:16px 22px; gap:18px; }
+  h1{ font-size:clamp(1.9rem,8vw,2.35rem); }
+  .hero h1{ margin-bottom:12px; }
+  .hbadges{ margin-bottom:11px; gap:5px; }
+  .hbadge{ font-size:.68rem; padding:4px 9px; }
+  .hbadge svg{ width:11px; height:11px; }
+  .herotxt p{ font-size:.95rem; margin-bottom:13px; line-height:1.5; }
+  .htel{ font-size:.97rem; }
+
+  .ck-kopf{ padding:9px 12px; }
+  .cav{ width:30px; height:30px; }
+  .ck-text{ padding:9px 12px 8px; font-size:.83rem; }
+  .ck-chips{ padding:0 12px 9px; }
+  .ck-feld{ padding:9px 9px 9px 13px; font-size:.83rem; }
+  .ck-send{ width:31px; height:31px; }
+}
+
+/* Niedrige Sichtfenster – das sind die allermeisten Handys,
+   sobald die Adressleiste des Browsers mitzaehlt. */
+@media (max-width:620px) and (max-height:700px){
+  .hbadges{ display:none; }
+  h1{ font-size:1.62rem; line-height:1.08; }
+  .hero h1{ margin-bottom:10px; }
+  .heroin{ padding-block:12px 16px; gap:13px; }
+  .herotxt p{ font-size:.89rem; margin-bottom:10px; line-height:1.45; }
+  .htel{ font-size:.92rem; }
+  .pills{ padding-block:7px 8px; }
+  .pills a{ padding:6px 13px; font-size:.79rem; }
+  .demobar{ font-size:.68rem; padding:5px 10px; }
+  .ck-text{ font-size:.79rem; padding:8px 12px 7px; }
+  .ck-chips{ padding:0 12px 8px; }
+  .chip{ font-size:.73rem; padding:5px 10px; }
+}
+
+/* Sehr niedrige Sichtfenster (iPhone SE im Hochformat) */
+@media (max-width:620px) and (max-height:585px){
+  h1{ font-size:1.5rem; }
+  .heroin{ padding-block:10px 12px; gap:11px; }
+  .herotxt p{ font-size:.85rem; margin-bottom:9px; }
+  .htel{ font-size:.88rem; }
+  .ck-kopf{ padding:8px 12px; }
+  .ck-feld{ padding:8px 9px 8px 13px; }
+}

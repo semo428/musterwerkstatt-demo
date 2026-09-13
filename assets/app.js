@@ -8,8 +8,6 @@
   if (!S) { console.error('config.js fehlt.'); return; }
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  // Auf Touch-Geraeten feuert mouseleave unzuverlaessig – dort steuert ein Knopf.
-  var kannSchweben = !window.matchMedia || window.matchMedia('(hover:hover) and (pointer:fine)').matches;
 
   /* ---------- Icons ---------- */
   var ICONS = {
@@ -400,39 +398,19 @@
     if (!chatEl || !kalEl || !tabsEl || !noteEl) return;
     var aktiv = 0;
 
-    /* --- Ablaufsteuerung mit Pause -------------------------------------
-       Die Animation haengt an verketteten Timern. Damit sie anhalten kann,
-       merkt sich "plane" den naechsten Schritt und dessen Restzeit. --- */
-    var pausiert = false, naechster = null, timerId = null, rest = 0, seit = 0;
+    /* --- Ablaufsteuerung -------------------------------------------------
+       Die Animation haengt an verketteten Timern. "plane" merkt sich den
+       laufenden Timer, damit "stop" ihn abraeumen kann, sobald die Buehne
+       aus dem Sichtbereich scrollt. Angehalten wird sonst nie. --------- */
+    var timerId = null;
 
     function plane(fn, ms) {
-      naechster = fn;
-      rest = ms;
-      if (pausiert) return;
-      seit = Date.now();
-      timerId = setTimeout(function () { naechster = null; fn(); }, ms);
+      timerId = setTimeout(fn, ms);
     }
 
     function stop() {
       clearTimeout(timerId);
-      naechster = null; rest = 0; timerId = null;
-    }
-
-    function anhalten() {
-      if (pausiert) return;
-      if (naechster && timerId) {
-        clearTimeout(timerId);
-        rest = Math.max(120, rest - (Date.now() - seit));
-      }
-      pausiert = true;
-      root.classList.add('pausiert');
-    }
-
-    function fortsetzen() {
-      if (!pausiert) return;
-      pausiert = false;
-      root.classList.remove('pausiert');
-      if (naechster) plane(naechster, rest);
+      timerId = null;
     }
 
     /* Lesezeit richtet sich nach der Laenge der Nachricht */
@@ -525,28 +503,9 @@
       if (b) starte(parseInt(b.dataset.sz, 10));
     });
 
-    // Anhalten nur, solange die Maus auf dem Telefon liegt.
-    // Die Markierung .pausiert sitzt weiterhin auf der Buehne, damit
-    // Plakette und angehaltene Animationen daran haengen koennen.
-    var phoneEl = root.querySelector('.bphone');
-    if (phoneEl && kannSchweben) {
-      phoneEl.addEventListener('mouseenter', anhalten);
-      phoneEl.addEventListener('mouseleave', fortsetzen);
-    }
-
-    // Touch-Geraete: sichtbarer Knopf zum Anhalten und Fortsetzen
-    var knopf = root.querySelector('.bplay');
-    if (knopf) {
-      knopf.addEventListener('click', function () {
-        if (pausiert) fortsetzen(); else anhalten();
-        knopf.setAttribute('aria-pressed', String(pausiert));
-        knopf.querySelector('.bplay-txt').textContent = pausiert ? 'Weiter' : 'Pause';
-      });
-    }
-
     kalEl.innerHTML = kalenderHtml();
     noteEl.textContent = SZENARIEN[0].hinweis;
-    sicht(root, function () { pausiert = false; root.classList.remove('pausiert'); starte(aktiv); }, stop);
+    sicht(root, function () { starte(aktiv); }, stop);
   }
 
   /* =======================================================================
@@ -710,10 +669,6 @@
     function stop() { an = false; if (raf) cancelAnimationFrame(raf); }
 
     sicht(root, start, stop);
-    if (kannSchweben) {
-      root.addEventListener('mouseenter', stop);
-      root.addEventListener('mouseleave', start);
-    }
   }
 
   /* Startet/stoppt eine Animation je nach Sichtbarkeit */
