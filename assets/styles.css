@@ -218,7 +218,7 @@ body.plain .nav a.ki{ background:transparent; color:var(--body); font-weight:550
 }
 .heroin{
   position:relative; display:grid; grid-template-columns:1fr 430px; gap:clamp(28px,4vw,56px);
-  align-items:center; padding:clamp(40px,6vw,72px) 0 clamp(44px,6vw,76px);
+  align-items:center; padding-block:clamp(40px,6vw,72px) clamp(44px,6vw,76px);
 }
 @media (max-width:980px){ .heroin{ grid-template-columns:1fr; gap:34px; } }
 
@@ -602,7 +602,7 @@ body.plain .asklabel{ display:none; }
 
 /* --- Handy: Hero straffen, damit der Chat früher sichtbar wird --------- */
 @media (max-width:600px){
-  .heroin{ padding:26px 0 32px; gap:24px; }
+  .heroin{ padding-block:26px 32px; gap:24px; }
   h1{ font-size:clamp(2.05rem,9vw,2.7rem); }
   .herotxt p{ font-size:1rem; margin-bottom:16px; }
   .hbadges{ margin-bottom:14px; gap:6px; }
@@ -1077,3 +1077,87 @@ body.plain .asklabel{ display:none; }
    Zwei Klassen, damit die Regel .testbanner b{display:block} (0,1,1)
    das verschachtelte <b> nicht zum Block macht und den Satz zerreisst. */
 .testbanner .tb-stark{ display:inline; color:#fff; font-weight:700; font-size:inherit; margin:0; }
+
+/* =========================================================================
+   HANDY: kompakte Chat-Vorschau statt vollem Fenster im Hero
+   ========================================================================= */
+.chatkompakt{
+  background:#fff; border-radius:var(--rl); overflow:hidden; cursor:pointer;
+  display:flex; flex-direction:column;
+}
+.ck-kopf{
+  background:linear-gradient(135deg,var(--ink),#28323F); color:#fff;
+  padding:12px 14px; display:flex; align-items:center; gap:10px;
+}
+.ck-text{
+  margin:0; padding:13px 14px 11px; font-size:.88rem; line-height:1.5; color:var(--ink2);
+}
+.ck-chips{
+  display:flex; gap:6px; padding:0 14px 12px; overflow-x:auto; scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  mask-image:linear-gradient(90deg,#000 86%,transparent);
+}
+.ck-chips::-webkit-scrollbar{ display:none; }
+.ck-chips .chip{ flex:none; }
+.ck-feld{
+  display:flex; align-items:center; gap:10px; width:100%; text-align:left; cursor:pointer;
+  border:0; border-top:1px solid var(--line); background:var(--bg2);
+  padding:11px 11px 11px 16px; font-size:.87rem; color:var(--soft);
+}
+.ck-feld > span:first-child{ flex:1; min-width:0; }
+.ck-send{
+  width:34px; height:34px; flex:none; border-radius:50%; background:var(--ac);
+  display:grid; place-items:center;
+}
+.ck-send svg{ width:16px; height:16px; color:#fff; }
+.chatkompakt:active{ transform:scale(.995); }
+
+/* Schwebendes Fenster auf dem Handy fast bildschirmfuellend */
+@media (max-width:620px){
+  .float{ height:min(640px, calc(100vh - 92px)); bottom:78px; }
+}
+
+/* =========================================================================
+   HANDY: Ankerleiste weicht beim Runterscrollen
+   ========================================================================= */
+@media (max-width:940px){
+  .pills{ transition:transform .26s cubic-bezier(.2,.7,.3,1); will-change:transform; }
+  .pills.weg{ transform:translateY(-102%); }
+  .top-in{ height:58px; }
+  :root{ --navH:58px; }
+}
+
+/* =========================================================================
+   Pause-Knopf fuer Geraete ohne Mauszeiger
+   ========================================================================= */
+.bplay{
+  position:absolute; top:12px; right:12px; z-index:7; display:none;
+  align-items:center; gap:7px; cursor:pointer;
+  background:var(--ink); color:#fff; border:0; border-radius:100px;
+  padding:8px 15px 8px 12px; font-size:.78rem; font-weight:700;
+  letter-spacing:.04em; box-shadow:var(--sh2);
+}
+.bplay svg{ width:13px; height:13px; color:var(--ac); }
+.bplay:active{ transform:scale(.97); }
+@media (hover:none), (pointer:coarse){
+  .bplay{ display:inline-flex; }
+  .bhinweis{ display:none; }
+  .bpause{ display:none; }          /* der Knopf zeigt den Zustand selbst */
+  .buehne{ padding-top:52px; }
+}
+
+/* Kopf der Kompaktkarte: Name und Status untereinander, nicht aneinander */
+.ck-kopf .ctxt b{ display:block; }
+.ck-kopf .ctxt > span{ font-size:.72rem; color:#9AA6B6; }
+
+/* Hero-Grid: Spalten duerfen unter ihre Mindestbreite schrumpfen.
+   Ohne min-width:0 presst die Chat-Karte als Grid-Element ihre
+   min-content-Breite durch und laeuft aus dem Bildschirm. */
+.heroin > *{ min-width:0; }
+.chatkompakt, .chatbox{ max-width:100%; }
+.ck-feld > span:first-child{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+/* Kompaktkarte noch etwas gedrungener */
+.ck-kopf{ padding:10px 13px; }
+.ck-text{ padding:11px 13px 9px; font-size:.855rem; }
+.ck-chips{ padding:0 13px 10px; }
+.ck-feld{ padding:10px 10px 10px 14px; }

@@ -220,6 +220,45 @@
       .finally(function () { clearTimeout(frist); sperren(false); });
   }
 
+  /* ---------- Kompakte Variante fuer schmale Bildschirme ---------------
+     Auf dem Handy nimmt das volle Chatfenster im Hero zu viel Raum ein.
+     Stattdessen eine Vorschaukarte: sieht nach Chat aus, laedt zum Tippen
+     ein und oeffnet das schwebende Fenster. --------------------------- */
+  var schmal = window.matchMedia && window.matchMedia('(max-width:620px)').matches;
+
+  function kompaktHtml() {
+    var chips = (C.vorschlaege || []).slice(0, 4).map(function (t) {
+      return '<button class="chip" type="button" data-ck-frage="' +
+        t.replace(/"/g, '&quot;') + '">' + t + '</button>';
+    }).join('');
+
+    return '<div class="chatkompakt" id="ck">' +
+      '<div class="ck-kopf">' +
+        '<span class="cav">' + ICON('chat') + '</span>' +
+        '<span class="ctxt"><b>' + C.titel + '</b>' +
+          '<span><i class="dotlive"></i>' + C.untertitel + '</span></span>' +
+      '</div>' +
+      '<p class="ck-text">' + (C.begruessungKurz || C.begruessung) + '</p>' +
+      '<div class="ck-chips">' + chips + '</div>' +
+      '<button class="ck-feld" type="button">' +
+        '<span>Frage stellen oder Termin nennen …</span>' +
+        '<span class="ck-send">' + ICON('send') + '</span>' +
+      '</button>' +
+    '</div>';
+  }
+
+  function mountKompakt(host) {
+    host.innerHTML = kompaktHtml();
+    host.addEventListener('click', function (e) {
+      var chip = e.target.closest('[data-ck-frage]');
+      schwebendAuf(true);
+      if (chip) {
+        var text = chip.getAttribute('data-ck-frage');
+        setTimeout(function () { frage(text); }, 320);
+      }
+    });
+  }
+
   /* ---------- Schwebendes Fenster ---------- */
   var fab, floater, offen = false, floatAufgebaut = false;
   var heroSichtbar = true;   // eine Quelle der Wahrheit für beide Fenster
@@ -238,7 +277,7 @@
   /* ---------- Öffentlicher Einstieg für die Ask-Buttons ---------- */
   window.assistentFragen = function (text) {
     var hero = document.getElementById('chat-hero');
-    if (hero && heroSichtbar) {
+    if (hero && heroSichtbar && !schmal) {
       hero.scrollIntoView({ behavior: 'smooth', block: 'center' });
       setTimeout(function () { frage(text); }, 260);
     } else {
@@ -250,9 +289,8 @@
   /* ---------- Start ---------- */
   function init() {
     var hero = document.getElementById('chat-hero');
-    if (hero) mount(hero, false);
+    if (hero) { if (schmal) mountKompakt(hero); else mount(hero, false); }
 
-    var schmal = window.matchMedia && window.matchMedia('(max-width:620px)').matches;
     add(schmal && C.begruessungKurz ? C.begruessungKurz : C.begruessung, 'bot');
     views.forEach(function (v) { v.log.scrollTop = 0; });
 

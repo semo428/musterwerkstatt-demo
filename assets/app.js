@@ -8,6 +8,8 @@
   if (!S) { console.error('config.js fehlt.'); return; }
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  // Auf Touch-Geraeten feuert mouseleave unzuverlaessig – dort steuert ein Knopf.
+  var kannSchweben = !window.matchMedia || window.matchMedia('(hover:hover) and (pointer:fine)').matches;
 
   /* ---------- Icons ---------- */
   var ICONS = {
@@ -204,6 +206,21 @@
     }
     markiere();
     window.addEventListener('scroll', markiere, { passive: true });
+
+    // Die Ankerleiste weicht beim Runterscrollen, kommt beim Hochscrollen zurueck.
+    // Spart auf dem Handy dauerhaft rund 54 Pixel Bildschirm.
+    var pills = document.querySelector('.pills');
+    if (pills) {
+      var letzteY = window.scrollY, weg = false;
+      window.addEventListener('scroll', function () {
+        var y = window.scrollY;
+        if (Math.abs(y - letzteY) < 10) return;
+        var runter = y > letzteY;
+        if (runter && y > 300 && !weg) { pills.classList.add('weg'); weg = true; }
+        else if (!runter && weg)       { pills.classList.remove('weg'); weg = false; }
+        letzteY = y;
+      }, { passive: true });
+    }
   }
 
   /* =======================================================================
@@ -512,9 +529,19 @@
     // Die Markierung .pausiert sitzt weiterhin auf der Buehne, damit
     // Plakette und angehaltene Animationen daran haengen koennen.
     var phoneEl = root.querySelector('.bphone');
-    if (phoneEl) {
+    if (phoneEl && kannSchweben) {
       phoneEl.addEventListener('mouseenter', anhalten);
       phoneEl.addEventListener('mouseleave', fortsetzen);
+    }
+
+    // Touch-Geraete: sichtbarer Knopf zum Anhalten und Fortsetzen
+    var knopf = root.querySelector('.bplay');
+    if (knopf) {
+      knopf.addEventListener('click', function () {
+        if (pausiert) fortsetzen(); else anhalten();
+        knopf.setAttribute('aria-pressed', String(pausiert));
+        knopf.querySelector('.bplay-txt').textContent = pausiert ? 'Weiter' : 'Pause';
+      });
     }
 
     kalEl.innerHTML = kalenderHtml();
@@ -683,8 +710,10 @@
     function stop() { an = false; if (raf) cancelAnimationFrame(raf); }
 
     sicht(root, start, stop);
-    root.addEventListener('mouseenter', stop);
-    root.addEventListener('mouseleave', start);
+    if (kannSchweben) {
+      root.addEventListener('mouseenter', stop);
+      root.addEventListener('mouseleave', start);
+    }
   }
 
   /* Startet/stoppt eine Animation je nach Sichtbarkeit */

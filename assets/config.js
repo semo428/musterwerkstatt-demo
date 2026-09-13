@@ -71,7 +71,7 @@ window.SITE = {
     titel:       'Werkstatt-Assistent',
     untertitel:  'Antwortet sofort · 24/7',
     begruessung: 'Guten Tag! Ich bin der digitale Assistent der Musterwerkstatt. Ich kenne unsere Leistungen, Preise und den Werkstattkalender – fragen Sie mich einfach, oder lassen Sie sich direkt einen Termin einbuchen.',
-    begruessungKurz: 'Guten Tag! Ich kenne Preise, Leistungen und den Werkstattkalender – fragen Sie mich einfach.',
+    begruessungKurz: 'Guten Tag! Ich kenne Preise, Leistungen und den Kalender – fragen Sie mich einfach.',
     vorschlaege: [
       'Was kostet die HU?',
       'Termin für Reifenwechsel',
